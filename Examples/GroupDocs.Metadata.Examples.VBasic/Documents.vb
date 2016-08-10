@@ -1,5 +1,4 @@
-﻿
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Text
 Imports GroupDocs.Metadata.Formats.Document
@@ -19,6 +18,7 @@ Imports GroupDocs.Metadata.Formats
 Imports GroupDocs.Metadata.Examples.CSharp.Utilities
 Imports GroupDocs.Metadata.Formats.Project
 Imports GroupDocs.Metadata.Standards.Project
+Imports GroupDocs.Metadata.Exceptions
 
 Namespace GroupDocs.Metadata.Examples.CSharp
     Public NotInheritable Class Documents
@@ -443,7 +443,25 @@ Namespace GroupDocs.Metadata.Examples.CSharp
                 docFormat.Save()
                 'ExEnd:SaveFileAfterMetadataUpdate
             End Sub
+
+            ''' <summary>
+            '''  Throw an Exception for Protected Document
+            ''' </summary>
+            Public Shared Sub DocumentProtectedException()
+                'ExStart:DocumentProtectedException
+                ' initialize DocFormat
+                Try
+                    Dim docFormat As New DocFormat(Common.MapSourceFilePath(filePath))
+
+                    ' and try to get document properties
+                    Dim documentProperties = docFormat.DocumentProperties
+                Catch ex As DocumentProtectedException
+                    Console.WriteLine("File is protected by password PDF: {0}", ex.Message)
+                End Try
+                'ExEnd:DocumentProtectedException
+            End Sub
 #End Region
+
         End Class
 
         Public NotInheritable Class Pdf
@@ -735,7 +753,7 @@ Namespace GroupDocs.Metadata.Examples.CSharp
             End Sub
             ' initialize file path
             'ExStart:SourcePptFilePath
-            Private Const filePath As String = "Documents/Ppt/sample.ppt"
+            Private Const filePath As String = "Documents/Ppt/sample.pptx"
             'ExEnd:SourcePptFilePath
 #Region "working with builtin document properties"
             ''' <summary>
@@ -928,6 +946,70 @@ Namespace GroupDocs.Metadata.Examples.CSharp
                     Console.WriteLine(exp.Message)
                 End Try
             End Sub
+#End Region
+
+#Region "working with hidden fields"
+            ''' <summary>
+            ''' Gets Comments, and Hidden Slides of PowerPoint file
+            ''' </summary> 
+            Public Shared Sub GetHiddenData()
+                Try
+                    'ExStart:GetHiddenDataInDocument
+                    ' initialize PptFormat
+                    Dim pptFormat As New PptFormat(Common.MapSourceFilePath(filePath))
+
+                    ' get hidden data
+                    Dim hiddenData As PptInspectionResult = pptFormat.InspectDocument()
+
+                    ' get comments
+                    Dim comments As PptComment() = hiddenData.Comments
+
+                    For Each comment As PptComment In comments
+                        Console.WriteLine("Author: {0}, Slide: {1}", comment.Author, comment.SlideId)
+                        'ExEnd:GetHiddenDataInDocument
+                    Next
+                Catch exp As Exception
+                    Console.WriteLine(exp.Message)
+                End Try
+            End Sub
+
+
+            ''' <summary>
+            ''' Removes Comments, and Hidden Slides of PowerPoint file
+            ''' </summary> 
+            Public Shared Sub RemoveHiddenSheets()
+                Try
+                    'ExStart:RemoveHiddenDataInDocument
+                    ' initialize PptFormat
+                    Dim pptFormat As New PptFormat(Common.MapSourceFilePath(filePath))
+
+                    ' get hidden data
+                    Dim hiddenData As PptInspectionResult = pptFormat.InspectDocument()
+
+                    ' get comments
+                    Dim comments As PptComment() = hiddenData.Comments
+
+                    If comments.Length > 0 Then
+                        For Each comment As PptComment In comments
+                            Console.WriteLine("Author: {0}, Slide: {1}", comment.Author, comment.SlideId)
+                        Next
+
+                        ' remove all comments
+                        pptFormat.RemoveHiddenData(New PptInspectionOptions(PptInspectorOptionsEnum.Comments))
+                        Console.WriteLine("Hidden Sheets Removed.")
+
+                        ' and commit changes
+                        pptFormat.Save()
+                        Console.WriteLine("Changes Save Successfully!")
+                    End If
+                    'ExEnd:RemoveHiddenDataInDocument
+
+                    Console.WriteLine("No Comments Found!")
+                Catch exp As Exception
+                    Console.WriteLine(exp.Message)
+                End Try
+            End Sub
+
 #End Region
         End Class
 
@@ -1125,6 +1207,73 @@ Namespace GroupDocs.Metadata.Examples.CSharp
                     'ExEnd:ClearCustomPropertyXlsFormat
 
                     Console.WriteLine("File saved in destination folder.")
+                Catch exp As Exception
+                    Console.WriteLine(exp.Message)
+                End Try
+            End Sub
+#End Region
+
+#Region "working with hidden fields"
+            ''' <summary>
+            ''' Gets comments, merge fields and hidden fields of Doc file
+            ''' </summary> 
+            Public Shared Sub GetHiddenData()
+                Try
+                    'ExStart:GetHiddenDataInDocument
+                    ' initialize XlsFormat
+                    Dim xlsFormat As New XlsFormat(Common.MapSourceFilePath(filePath))
+
+                    ' get hidden data
+                    Dim hiddenData As XlsInspectionResult = xlsFormat.InspectDocument()
+
+                    ' get hidden sheets
+                    Dim hiddenSheets As XlsSheet() = hiddenData.HiddenSheets
+
+                    If hiddenSheets.Length > 0 Then
+                        ' clear hidden sheets
+                        xlsFormat.RemoveHiddenData(New XlsInspectionOptions(XlsInspectorOptionsEnum.HiddenSheets))
+
+                        ' and commit changes
+                        xlsFormat.Save()
+                    End If
+                    'ExEnd:GetHiddenDataInDocument
+                    Console.WriteLine("No Hidden Sheets Found!")
+                Catch exp As Exception
+                    Console.WriteLine(exp.Message)
+                End Try
+            End Sub
+            ''' <summary>
+            ''' Gets comments, merge fields and hidden fields of Doc file
+            ''' </summary> 
+            Public Shared Sub RemoveSheets()
+                Try
+                    'ExStart:RemoveHiddenDataInDocument
+                    ' initialize XlsFormat
+                    Dim xlsFormat As New XlsFormat(Common.MapSourceFilePath(filePath))
+
+                    ' get hidden data
+                    Dim hiddenData As XlsInspectionResult = xlsFormat.InspectDocument()
+
+                    ' get hidden sheets
+                    Dim hiddenSheets As XlsSheet() = hiddenData.HiddenSheets
+
+
+                    ' display hidden fields 
+                    If hiddenSheets.Length > 0 Then
+                        For Each sheet As var In hiddenSheets
+                            Console.WriteLine("Hiddent Sheets in document: " + sheet.ToString())
+                        Next
+
+                        ' clear hidden sheets
+                        xlsFormat.RemoveHiddenData(New XlsInspectionOptions(XlsInspectorOptionsEnum.HiddenSheets))
+                        Console.WriteLine("Hidden Sheets Removed.")
+
+                        ' and commit changes
+                        xlsFormat.Save()
+                        Console.WriteLine("Changes Save Successfully!")
+                    End If
+                    'ExEnd:RemoveHiddenDataInDocument
+                    Console.WriteLine("No Data Found to be removed.")
                 Catch exp As Exception
                     Console.WriteLine(exp.Message)
                 End Try

@@ -19,6 +19,7 @@ using GroupDocs.Metadata.Formats;
 using GroupDocs.Metadata.Examples.CSharp.Utilities;
 using GroupDocs.Metadata.Formats.Project;
 using GroupDocs.Metadata.Standards.Project;
+using GroupDocs.Metadata.Exceptions;
 
 namespace GroupDocs.Metadata.Examples.CSharp
 {
@@ -507,7 +508,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                 //ExStart:SaveFileAfterMetadataUpdate
                 // initialize DocFormat
                 DocFormat docFormat = new DocFormat(Common.MapSourceFilePath(filePath));
-                
+
                 // update document properties
                 docFormat.DocumentProperties.Author = "Joe Doe";
                 docFormat.DocumentProperties.Company = "Aspose";
@@ -516,7 +517,29 @@ namespace GroupDocs.Metadata.Examples.CSharp
                 docFormat.Save();
                 //ExEnd:SaveFileAfterMetadataUpdate
             }
+
+            /// <summary>
+            ///  Throw an Exception for Protected Document
+            /// </summary>
+            public static void DocumentProtectedException()
+            {
+                //ExStart:DocumentProtectedException
+                // initialize DocFormat
+                try
+                {
+                    DocFormat docFormat = new DocFormat(Common.MapSourceFilePath(filePath));
+
+                    // and try to get document properties
+                    var documentProperties = docFormat.DocumentProperties;
+                }
+                catch (DocumentProtectedException ex)
+                {
+                    Console.WriteLine("File is protected by password PDF: {0}", ex.Message);
+                }
+                //ExEnd:DocumentProtectedException
+            }
             #endregion
+
         }
 
         public static class Pdf
@@ -855,7 +878,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
         {
             // initialize file path
             //ExStart:SourcePptFilePath
-            private const string filePath = "Documents/Ppt/sample.ppt";
+            private const string filePath = "Documents/Ppt/sample.pptx";
             //ExEnd:SourcePptFilePath
             #region working with builtin document properties
             /// <summary>
@@ -1084,6 +1107,81 @@ namespace GroupDocs.Metadata.Examples.CSharp
                     Console.WriteLine(exp.Message);
                 }
             }
+            #endregion
+
+            #region working with hidden fields
+            /// <summary>
+            /// Gets Comments, and Hidden Slides of PowerPoint file
+            /// </summary> 
+            public static void GetHiddenData()
+            {
+                try
+                {
+                    //ExStart:GetHiddenDataInDocument
+                    // initialize PptFormat
+                    PptFormat pptFormat = new PptFormat(Common.MapSourceFilePath(filePath));
+
+                    // get hidden data
+                    PptInspectionResult hiddenData = pptFormat.InspectDocument();
+
+                    // get comments
+                    PptComment[] comments = hiddenData.Comments;
+
+                    foreach (PptComment comment in comments)
+                    {
+                        Console.WriteLine("Author: {0}, Slide: {1}", comment.Author, comment.SlideId);
+                    }
+                    //ExEnd:GetHiddenDataInDocument
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine(exp.Message);
+                }
+            }
+
+
+            /// <summary>
+            /// Removes Comments, and Hidden Slides of PowerPoint file
+            /// </summary> 
+            public static void RemoveHiddenSheets()
+            {
+                try
+                {
+                    //ExStart:RemoveHiddenDataInDocument
+                    // initialize PptFormat
+                    PptFormat pptFormat = new PptFormat(Common.MapSourceFilePath(filePath));
+
+                    // get hidden data
+                    PptInspectionResult hiddenData = pptFormat.InspectDocument();
+
+                    // get comments
+                    PptComment[] comments = hiddenData.Comments;
+
+                    if (comments.Length > 0)
+                    {
+                        foreach (PptComment comment in comments)
+                        {
+                            Console.WriteLine("Author: {0}, Slide: {1}", comment.Author, comment.SlideId);
+                        }
+
+                        // remove all comments
+                        pptFormat.RemoveHiddenData(new PptInspectionOptions(PptInspectorOptionsEnum.Comments));
+                        Console.WriteLine("Hidden Sheets Removed.");
+
+                        // and commit changes
+                        pptFormat.Save();
+                        Console.WriteLine("Changes Save Successfully!");
+                    }
+                    //ExEnd:RemoveHiddenDataInDocument
+
+                    Console.WriteLine("No Comments Found!");
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine(exp.Message);
+                }
+            }
+
             #endregion
         }
 
@@ -1321,6 +1419,84 @@ namespace GroupDocs.Metadata.Examples.CSharp
                 }
             }
             #endregion
+
+            #region working with hidden fields
+            /// <summary>
+            /// Gets comments, merge fields and hidden fields of Doc file
+            /// </summary> 
+            public static void GetHiddenData()
+            {
+                try
+                {
+                    //ExStart:GetHiddenDataInDocument
+                    // initialize XlsFormat
+                    XlsFormat xlsFormat = new XlsFormat(Common.MapSourceFilePath(filePath));
+
+                    // get hidden data
+                    XlsInspectionResult hiddenData = xlsFormat.InspectDocument();
+
+                    // get hidden sheets
+                    XlsSheet[] hiddenSheets = hiddenData.HiddenSheets;
+
+                    if (hiddenSheets.Length > 0)
+                    {
+                        // clear hidden sheets
+                        xlsFormat.RemoveHiddenData(new XlsInspectionOptions(XlsInspectorOptionsEnum.HiddenSheets));
+
+                        // and commit changes
+                        xlsFormat.Save();
+                    }
+                    //ExEnd:GetHiddenDataInDocument
+                    Console.WriteLine("No Hidden Sheets Found!");
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine(exp.Message);
+                }
+            }
+            /// <summary>
+            /// Gets comments, merge fields and hidden fields of Doc file
+            /// </summary> 
+            public static void RemoveSheets()
+            {
+                try
+                {
+                    //ExStart:RemoveHiddenDataInDocument
+                    // initialize XlsFormat
+                    XlsFormat xlsFormat = new XlsFormat(Common.MapSourceFilePath(filePath));
+
+                    // get hidden data
+                    XlsInspectionResult hiddenData = xlsFormat.InspectDocument();
+
+                    // get hidden sheets
+                    XlsSheet[] hiddenSheets = hiddenData.HiddenSheets;
+
+
+                    // display hidden fields 
+                    if (hiddenSheets.Length > 0)
+                    {
+                        foreach (var sheet in hiddenSheets)
+                        {
+                            Console.WriteLine("Hiddent Sheets in document: " + sheet.ToString());
+                        }
+
+                        // clear hidden sheets
+                        xlsFormat.RemoveHiddenData(new XlsInspectionOptions(XlsInspectorOptionsEnum.HiddenSheets));
+                        Console.WriteLine("Hidden Sheets Removed.");
+
+                        // and commit changes
+                        xlsFormat.Save();
+                        Console.WriteLine("Changes Save Successfully!");
+                    }
+                    //ExEnd:RemoveHiddenDataInDocument
+                    Console.WriteLine("No Data Found to be removed.");
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine(exp.Message);
+                }
+            }
+            #endregion
         }
 
         public static class OneNote
@@ -1411,7 +1587,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
             //ExStart:SourceMSProjectFilePath
             private const string filePath = "Documents/MSProject/sample.mpp";
             //ExEnd:SourceMSProjectFilePath
-            
+
             /// <summary>
             /// Gets properties of MS Project file  
             /// </summary> 
@@ -1425,7 +1601,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
 
                     // get document properties
                     MppMetadata properties = mppFormat.GetProperties();
-                     
+
                     if (mppFormat != null)
                     {
                         // get Author 
@@ -1433,7 +1609,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                         // get Company 
                         Console.WriteLine("Company: {0}", properties.Company);
                         // get Keywords 
-                        Console.WriteLine("Keywords: {0}", properties.Keywords); 
+                        Console.WriteLine("Keywords: {0}", properties.Keywords);
                     }
                     //ExEnd:GetMetadataMppFormat
                 }
@@ -1511,9 +1687,9 @@ namespace GroupDocs.Metadata.Examples.CSharp
             try
             {
                 //ExStart:DetectProtection
-                FormatBase format = FormatFactory.RecognizeFormat(Common.MapSourceFilePath(filePath)); 
+                FormatBase format = FormatFactory.RecognizeFormat(Common.MapSourceFilePath(filePath));
 
-                if(format.Type.ToString().ToLower()=="doc")
+                if (format.Type.ToString().ToLower() == "doc")
                 {
                     // initialize DocFormat
                     DocFormat docFormat = new DocFormat(Common.MapSourceFilePath(filePath));
@@ -1521,7 +1697,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                     // determines whether document is protected by password
                     Console.WriteLine(docFormat.IsProtected ? "Document is protected" : "Document is protected");
                 }
-                else if(format.Type.ToString().ToLower()=="pdf")
+                else if (format.Type.ToString().ToLower() == "pdf")
                 {
                     // initialize DocFormat
                     PdfFormat pdfFormat = new PdfFormat(Common.MapSourceFilePath(filePath));
@@ -1537,7 +1713,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                     // determines whether document is protected by password
                     Console.WriteLine(xlsFormat.IsProtected ? "Document is protected" : "Document is protected");
                 }
-                else if(format.Type.ToString().ToLower()=="ppt")
+                else if (format.Type.ToString().ToLower() == "ppt")
                 {
                     // initialize DocFormat
                     PptFormat pptFormat = new PptFormat(Common.MapSourceFilePath(filePath));
@@ -1548,7 +1724,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                 else
                 {
                     Console.WriteLine("Invalid Format.");
-                }                
+                }
                 //ExEnd:DetectProtection
             }
             catch (Exception exp)
@@ -1557,6 +1733,6 @@ namespace GroupDocs.Metadata.Examples.CSharp
             }
 
         }
-        
+
     }
 }

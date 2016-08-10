@@ -27,6 +27,7 @@ Imports GroupDocs.Metadata.Standards.Cad
 Imports GroupDocs.Metadata.Tools.Comparison
 Imports GroupDocs.Metadata.Standards.Iptc
 Imports GroupDocs.Metadata.Xmp.Schemas.Iptc
+Imports GroupDocs.Metadata.Standards.Tiff
 
 Namespace GroupDocs.Metadata.Examples.CSharp
     Public NotInheritable Class Images
@@ -1520,6 +1521,66 @@ Namespace GroupDocs.Metadata.Examples.CSharp
                 Catch exp As Exception
                     Console.WriteLine(exp.Message)
                 End Try
+            End Sub
+
+            ''' <summary>
+            '''Gets XMP properties from Tiff file
+            ''' </summary> 
+            Public Shared Sub GetXMPProperties()
+                Try
+                    'ExStart:GetXMPPropertiesPngImage 
+                    ' initialize PngFormat
+                    Dim tiff As New TiffFormat(Common.MapSourceFilePath(filePath))
+
+                    ' get xmp
+                    Dim xmpPacket As XmpPacketWrapper = tiff.GetXmpData()
+                    If xmpPacket IsNot Nothing Then
+                        ' show XMP data
+                        Console.WriteLine("XMP Data Found")
+                    Else
+                        Console.WriteLine("No XMP data found.")
+                        'ExEnd:GetXMPPropertiesPngImage 
+                    End If
+                Catch exp As Exception
+                    Console.WriteLine(exp.Message)
+                End Try
+            End Sub
+
+            ''' <summary>
+            '''ReadTiff File Directory Tags from Tiff file
+            ''' </summary>
+            Public Shared Sub ReadTiffFileDirectoryTags()
+                'ExStart:ReadTiffFileDirectoryTags 
+                ' initialize PngFormat
+                Dim tiffFormat As New TiffFormat(Common.MapSourceFilePath(filePath))
+
+                ' get IFD
+                Dim directories As TiffIfd() = tiffFormat.ImageFileDirectories
+
+                If directories.Length > 0 Then
+                    ' get tags of the first IFD
+                    Dim tags As TiffTag() = tiffFormat.GetTags(directories(0))
+
+                    ' write tags to the console
+                    For Each tiffTag As TiffTag In tags
+                        Console.WriteLine("tag: {0}", tiffTag.DefinedTag)
+                        Select Case tiffTag.TagType
+                            Case TiffTagType.Ascii
+                                Dim asciiTag As TiffAsciiTag = TryCast(tiffTag, TiffAsciiTag)
+                                Console.WriteLine("Value: {0}", asciiTag.Value)
+                                Exit Select
+
+                            Case TiffTagType.[Short]
+                                Dim shortTag As TiffShortTag = TryCast(tiffTag, TiffShortTag)
+                                Console.WriteLine("Value: {0}", shortTag.Value)
+                                Exit Select
+                            Case Else
+
+                                Exit Select
+                        End Select
+                    Next
+                End If
+                'ExEnd:ReadTiffFileDirectoryTags
             End Sub
 
         End Class
