@@ -1,4 +1,5 @@
-﻿Imports System.Collections.Generic
+﻿
+Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Text
 Imports GroupDocs.Metadata.Formats.Document
@@ -20,7 +21,7 @@ Imports GroupDocs.Metadata.Formats.Project
 Imports GroupDocs.Metadata.Standards.Project
 Imports GroupDocs.Metadata.Exceptions
 
-Namespace GroupDocs.Metadata.Examples.CSharp
+Namespace GroupDocs.Metadata.Examples.VBasic
     Public NotInheritable Class Documents
         Private Sub New()
         End Sub
@@ -1001,10 +1002,11 @@ Namespace GroupDocs.Metadata.Examples.CSharp
                         ' and commit changes
                         pptFormat.Save()
                         Console.WriteLine("Changes Save Successfully!")
-                    End If
-                    'ExEnd:RemoveHiddenDataInDocument
+                    Else
+                        Console.WriteLine("No Comments Found!")
+                        'ExEnd:RemoveHiddenDataInDocument
 
-                    Console.WriteLine("No Comments Found!")
+                    End If
                 Catch exp As Exception
                     Console.WriteLine(exp.Message)
                 End Try
@@ -1215,7 +1217,7 @@ Namespace GroupDocs.Metadata.Examples.CSharp
 
 #Region "working with hidden fields"
             ''' <summary>
-            ''' Gets comments, merge fields and hidden fields of Doc file
+            ''' Gets comments and hidden sheets of Xls file
             ''' </summary> 
             Public Shared Sub GetHiddenData()
                 Try
@@ -1235,15 +1237,17 @@ Namespace GroupDocs.Metadata.Examples.CSharp
 
                         ' and commit changes
                         xlsFormat.Save()
+                        Console.WriteLine("File Saved Successfully!")
+                    Else
+                        Console.WriteLine("No Hidden Sheets Found!")
+                        'ExEnd:GetHiddenDataInDocument
                     End If
-                    'ExEnd:GetHiddenDataInDocument
-                    Console.WriteLine("No Hidden Sheets Found!")
                 Catch exp As Exception
                     Console.WriteLine(exp.Message)
                 End Try
             End Sub
             ''' <summary>
-            ''' Gets comments, merge fields and hidden fields of Doc file
+            ''' REmove comments, and hidden sheets of Xls file
             ''' </summary> 
             Public Shared Sub RemoveSheets()
                 Try

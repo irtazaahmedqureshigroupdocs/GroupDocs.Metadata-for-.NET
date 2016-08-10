@@ -1172,9 +1172,12 @@ namespace GroupDocs.Metadata.Examples.CSharp
                         pptFormat.Save();
                         Console.WriteLine("Changes Save Successfully!");
                     }
+                    else
+                    {
+                        Console.WriteLine("No Comments Found!");
+                    }
                     //ExEnd:RemoveHiddenDataInDocument
 
-                    Console.WriteLine("No Comments Found!");
                 }
                 catch (Exception exp)
                 {
@@ -1422,7 +1425,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
 
             #region working with hidden fields
             /// <summary>
-            /// Gets comments, merge fields and hidden fields of Doc file
+            /// Gets comments and hidden sheets of Xls file
             /// </summary> 
             public static void GetHiddenData()
             {
@@ -1445,9 +1448,13 @@ namespace GroupDocs.Metadata.Examples.CSharp
 
                         // and commit changes
                         xlsFormat.Save();
+                        Console.WriteLine("File Saved Successfully!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Hidden Sheets Found!");
                     }
                     //ExEnd:GetHiddenDataInDocument
-                    Console.WriteLine("No Hidden Sheets Found!");
                 }
                 catch (Exception exp)
                 {
@@ -1455,7 +1462,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                 }
             }
             /// <summary>
-            /// Gets comments, merge fields and hidden fields of Doc file
+            /// REmove comments, and hidden sheets of Xls file
             /// </summary> 
             public static void RemoveSheets()
             {

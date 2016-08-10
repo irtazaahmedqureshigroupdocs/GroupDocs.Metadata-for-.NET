@@ -8,7 +8,7 @@ Imports GroupDocs.Metadata.Tools.Search
 Imports GroupDocs.Metadata.Tools.Comparison
 Imports GroupDocs.Metadata.Examples.CSharp.Utilities
 
-Namespace GroupDocs.Metadata.Examples.CSharp
+Namespace GroupDocs.Metadata.Examples.VBasic
     Class Program
         Private Shared Sub Main(args As String())
             ' Apply product license

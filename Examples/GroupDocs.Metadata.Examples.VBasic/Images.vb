@@ -28,7 +28,7 @@ Imports GroupDocs.Metadata.Standards.Iptc
 Imports GroupDocs.Metadata.Xmp.Schemas.Iptc
 Imports GroupDocs.Metadata.Standards.Tiff
 
-Namespace GroupDocs.Metadata.Examples.CSharp
+Namespace GroupDocs.Metadata.Examples.VBasic
     Public NotInheritable Class Images
         Private Sub New()
         End Sub
