@@ -281,6 +281,13 @@ Namespace GroupDocs.Metadata.Examples.CSharp
             'Remove Exif Info of Tiff image
             Images.Tiff.RemoveExifInfo()
 
+            'Reads Xmp Metadata from Tiff Image
+            Images.Tiff.GetXMPProperties()
+
+            'Reads Image Directory Tags from Tiff Image
+            Images.Tiff.ReadTiffFileDirectoryTags()
+
+
             '#End Region
 
             '#End Region

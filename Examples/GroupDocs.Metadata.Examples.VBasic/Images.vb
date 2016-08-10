@@ -1,5 +1,4 @@
-﻿
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Text
 Imports GroupDocs.Metadata.Formats.Image
@@ -1528,7 +1527,7 @@ Namespace GroupDocs.Metadata.Examples.CSharp
             ''' </summary> 
             Public Shared Sub GetXMPProperties()
                 Try
-                    'ExStart:GetXMPPropertiesPngImage 
+                    'ExStart:GetXMPPropertiesTiffImage 
                     ' initialize PngFormat
                     Dim tiff As New TiffFormat(Common.MapSourceFilePath(filePath))
 
@@ -1539,7 +1538,7 @@ Namespace GroupDocs.Metadata.Examples.CSharp
                         Console.WriteLine("XMP Data Found")
                     Else
                         Console.WriteLine("No XMP data found.")
-                        'ExEnd:GetXMPPropertiesPngImage 
+                        'ExEnd:GetXMPPropertiesTiffImage 
                     End If
                 Catch exp As Exception
                     Console.WriteLine(exp.Message)

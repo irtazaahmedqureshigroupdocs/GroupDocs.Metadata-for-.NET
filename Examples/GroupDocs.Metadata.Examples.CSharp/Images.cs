@@ -1747,7 +1747,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
             {
                 try
                 {
-                    //ExStart:GetXMPPropertiesPngImage 
+                    //ExStart:GetXMPPropertiesTiffImage 
                     // initialize PngFormat
                     TiffFormat tiff = new TiffFormat(Common.MapSourceFilePath(filePath));
 
@@ -1762,7 +1762,7 @@ namespace GroupDocs.Metadata.Examples.CSharp
                     {
                         Console.WriteLine("No XMP data found.");
                     }
-                    //ExEnd:GetXMPPropertiesPngImage 
+                    //ExEnd:GetXMPPropertiesTiffImage 
                 }
                 catch (Exception exp)
                 {
